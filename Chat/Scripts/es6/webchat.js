@@ -93,6 +93,50 @@ $(document).ready(function() {
         self.messageText = ko.observable("");
         self.users = ko.observableArray([]);
         self.userListSize = ko.observable(minUserListSize);
+
+        var chatHub = $.connection.chatHub;
+
+        chatHub.client.addMessage = function(data) {
+            self.messages.push(data);
+        };
+
+        chatHub.client.onConnected = function(data, allUsers) {
+            self.isJoined(true);
+            self.users([]);
+            allUsers.forEach(function(user) {
+                self.users.push(user.UserName);
+            });
+            self.users.sort();
+            self.userListSize(Math.max(minUserListSize, self.users().length));
+            self.messages.push(data);
+        }
+
+        chatHub.client.onUserDisconnected = function(data) {
+            self.users.remove(data.UserName);
+            self.messages.push(data);
+        }
+
+        chatHub.client.onNewUserConnected = function(data) {
+            self.users.push(data.UserName);
+            self.messages.push(data);
+        }
+
+        self.connect = function() {
+            $.connection.hub.start().done(function() {
+                $('#sendForm').submit(function(e) {
+                    e.preventDefault();
+                    if (self.messageText().length == 0) return;
+                    chatHub.server.sendMessage(self.messageText());
+                    self.messageText("");
+                });
+                chatHub.server.connect(username);
+            });
+        }
+
+        self.disconnect = function() {
+            chatHub.connection.stop();
+            self.isJoined(false);
+        }
     };
 
     const getUsers = function() {
@@ -114,6 +158,12 @@ $(document).ready(function() {
     $('#endDate').datetimepicker({
         format: 'Y-m-d H:i'
     });
+
+    $("#messages").on("DOMSubtreeModified",
+        function() {
+            $(this).scrollTop($(this).height());
+        });
+    
 
     initDataTable({
         "columns": [
@@ -156,4 +206,5 @@ $(document).ready(function() {
 
     const chatModel = new ChatModel();
     ko.applyBindings(chatModel);
+    chatModel.connect();
 });

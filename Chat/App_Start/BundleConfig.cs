@@ -23,6 +23,9 @@ namespace Chat
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                         "~/Scripts/knockout-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
+                  "~/Scripts/jquery.signalR-{version}.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/webchat").Include(
                         "~/Scripts/es6/webchat.js"));
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

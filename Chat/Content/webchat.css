@@ -48,6 +48,10 @@
     background-color: #555;
 }
 
+.border-dark {
+    border-color: lightgray!important;
+}
+
 #chat { height: 600px; }
 
 #messages_block {
@@ -165,11 +169,10 @@ input[type=submit] { border: 1px solid gray; }
 }
 #datatable .dateTime {
     width: 1px;
-    font-family: monospace;
 }
 #datatable .type {
     width: 1px;
 }
 #datatable .message {
-    width: 100%;
+    width: 50%!important;
 }
