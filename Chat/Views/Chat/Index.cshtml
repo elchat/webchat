@@ -1,0 +1,129 @@
+﻿@using Microsoft.AspNet.Identity
+@model dynamic
+
+@{
+    ViewBag.Title = "Веб чат";
+}
+
+@Styles.Render("~/Content/datatables")
+@Styles.Render("~/Content/datetimepicker")
+@Styles.Render("~/Content/webchat")
+
+<div class="container">
+    <div class="panel with-nav-tabs panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#chat">Чат</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#hist">История</a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div id="chat" class="tab-pane fade in active ">
+                    <h2>Веб-чат</h2>
+                    <div id="messages_block" class="col-md-10">
+                        <div id="messages" data-bind="foreach: messages">
+                            <div data-bind="css: {message_bg: Type == 'MESSAGE', you: Type == 'MESSAGE' && UserName == username, info: Type != 'MESSAGE'}">
+                                <span class="message" data-bind="if: Type == 'MESSAGE'">
+                                    <span class="user left-block"
+                                          data-bind="text: UserName">
+                                    </span>
+                                    <span class="date text-right" data-bind="text: getDate(DateTime)"></span>
+                                    <br />
+                                    <span class="text" data-bind="text: Message"></span>
+                                </span>
+                                <span class="join" data-bind="if: Type == 'JOIN'">
+                                    <span class="date" data-bind="text: getDate(DateTime)"></span> <span class="user" data-bind="text: UserName"></span> вошел в чат.
+                                </span>
+                                <span class="leave" data-bind="if: Type == 'LEAVE'">
+                                    <span class="date" data-bind="text: getDate(DateTime)"></span> <span class="user" data-bind="text: UserName"></span> вышел из чата.
+                                </span>
+                            </div>
+                        </div>
+
+                        <form id="sendForm">
+                            <input id="inputText" placeholder="Введите сообщение" type="input"
+                                   data-bind="enable: isJoined, value: messageText" />
+                        </form>
+                    </div>
+                    <div id="users_block" class="col-md-2">
+                        <select id="users" data-bind="options: users,  attr: {size: userListSize}"></select>
+                    </div>
+
+                </div>
+
+
+                <div id="hist" class="tab-pane fade" onactivate="getUser">
+                    <h2>История</h2>
+                    <div class="card border-dark">
+                        <div class="card-body pb-0">
+                            <form id="filter">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="startDate">
+                                            От даты
+                                        </label>
+                                        <input class="form-control" name="startDate" id="startDate" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="endDate">
+                                            До даты
+                                        </label>
+                                        <input class="form-control" name="endDate" id="endDate" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="user">
+                                            Пользователь
+                                        </label>
+                                        <select class="form-control" name="user" id="user" autocomplete="off"></select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <br />
+                        <div class="card-footer">
+                            <button class="btn btn-danger" onclick="clearFilter()">
+                                <span class="fa fa-remove"></span>
+                                Отменить
+                            </button>
+                            <button class="btn btn-primary" onclick="ctx.updateTable()">
+                                <span class="fa fa-filter"></span>
+                                Отфильтровать
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <table id="datatable" class="stripe" styl="width:100%">
+                        <thead>
+                        <tr>
+                            <th class="id">ID</th>
+                            <th class="dateTime">Время</th>
+                            <th class="user">Пользователь</th>
+                            <th class="type">Тип</th>
+                            <th class="message">Сообщение</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts {
+    <script>
+        const username = "@User.Identity.GetUserName()";
+    </script>
+    @*@Scripts.Render("~/bundles/signalr")
+    @Scripts.Render("/signalr/hubs")*@
+    @Scripts.Render("~/bundles/datatables")
+    @Scripts.Render("~/bundles/datetimepicker")
+    @Scripts.Render("~/bundles/webchat")
+}

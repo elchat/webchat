@@ -10,6 +10,10 @@ namespace Chat.Controllers
     {
         public ActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Chat");
+            }
             return View();
         }
 
