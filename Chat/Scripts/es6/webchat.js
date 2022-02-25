@@ -87,6 +87,7 @@ $(document).ready(function() {
     const ChatModel = function() {
         const self = this;
         const minUserListSize = 10;
+        let username = "";
 
         self.isJoined = ko.observable(false);
         self.messages = ko.observableArray([]);
@@ -102,6 +103,7 @@ $(document).ready(function() {
 
         chatHub.client.onConnected = function(data, allUsers) {
             self.isJoined(true);
+            username = data.UserName;
             self.users([]);
             allUsers.forEach(function(user) {
                 self.users.push(user.UserName);
@@ -129,7 +131,7 @@ $(document).ready(function() {
                     chatHub.server.sendMessage(self.messageText());
                     self.messageText("");
                 });
-                chatHub.server.connect(username);
+                chatHub.server.connect();
             });
         }
 
@@ -163,7 +165,7 @@ $(document).ready(function() {
         function() {
             $(this).scrollTop($(this).height());
         });
-    
+
 
     initDataTable({
         "columns": [

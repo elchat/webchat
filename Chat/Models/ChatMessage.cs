@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Chat.Models
 {
-    public class MessageViewModel
+    public class ChatMessage
     {
         public enum MessageType
         {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Chat.Controllers;
+using Chat.Data;
 using Chat.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using WebChat.Models;
 
@@ -10,17 +11,21 @@ namespace Chat.Hubs
 {
     public class ChatHub : Hub
     {
-        private List<MessageViewModel> _messages = ChatController.Messages;
-
+        private readonly ApplicationContext _context;
         public static List<ChatUser> Users = new List<ChatUser>();
-        private static int _id = 0;
-
-        public void Connect(string userName)
+        
+        public ChatHub()
         {
+            _context = new ApplicationContext();
+        }
+
+        public void Connect()
+        {
+            string userName = Context.User.Identity.GetUserName();
             string id = Context.ConnectionId;
             var user = new ChatUser(id, userName);
             Users.Add(user);
-            MessageViewModel model = GetModel(MessageViewModel.MessageType.JOIN, user.UserName, null);
+            ChatMessage model = GetModel(ChatMessage.MessageType.JOIN, user.UserName, null);
             Clients.Caller.onConnected(model, Users);
             Clients.Others.onNewUserConnected(model);
         }
@@ -31,8 +36,7 @@ namespace Chat.Hubs
             if (user != null)
             {
                 Users.Remove(user);
-                MessageViewModel model = GetModel(MessageViewModel.MessageType.LEAVE, user.UserName, null);
-                var id = Context.ConnectionId;
+                ChatMessage model = GetModel(ChatMessage.MessageType.LEAVE, user.UserName, null);
                 Clients.All.onUserDisconnected(model);
             }
             return base.OnDisconnected(stopCalled);
@@ -42,19 +46,19 @@ namespace Chat.Hubs
         {
             var user = Users.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
             string current = user.UserName;
-            MessageViewModel model = GetModel(MessageViewModel.MessageType.MESSAGE, current, message);
+            ChatMessage model = GetModel(ChatMessage.MessageType.MESSAGE, current, message);
             Clients.All.addMessage(model);
         }
 
-        private MessageViewModel GetModel(MessageViewModel.MessageType type, string userName, string message)
+        private ChatMessage GetModel(ChatMessage.MessageType type, string userName, string message)
         {
-            MessageViewModel model = new MessageViewModel();
-            model.Id = ++_id;
+            ChatMessage model = new ChatMessage();
             model.DateTime = DateTime.Now;
             model.UserName = userName;
             model.Type = type.ToString();
             model.Message = message;
-            _messages.Add(model);
+            _context.ChatMessages.Add(model);
+            _context.SaveChanges();
             return model;
         }
     }

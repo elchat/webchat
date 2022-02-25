@@ -1,6 +1,4 @@
 ﻿@using Microsoft.AspNet.Identity
-@model dynamic
-
 @{
     ViewBag.Title = "Веб чат";
 }
@@ -24,10 +22,6 @@
         <div class="panel-body">
             <div class="tab-content">
                 <div id="chat" class="tab-pane fade in active ">
-                    <div>
-                        <button data-bind="enable: !isJoined(), click: connect">Войти</button>
-                        <button data-bind="enable: isJoined, click: disconnect">Выйти</button>
-                    </div>
                     <div id="messages_block" class="col-md-10">
                         <div id="messages" data-bind="foreach: messages">
                             <div data-bind="css: {message_bg: Type == 'MESSAGE', you: Type == 'MESSAGE' && UserName == username, info: Type != 'MESSAGE'}">
@@ -121,7 +115,7 @@
 
 @section scripts {
     <script>
-        const username = "@User.Identity.GetUserName()";
+        let username = "@User.Identity.GetUserName()";
     </script>
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("/signalr/hubs")
