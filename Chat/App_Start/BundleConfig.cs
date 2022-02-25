@@ -28,6 +28,7 @@ namespace Chat
 
             bundles.Add(new ScriptBundle("~/bundles/webchat").Include(
                         "~/Scripts/es6/webchat.js"));
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -46,6 +47,9 @@ namespace Chat
 
             bundles.Add(new StyleBundle("~/Content/datetimepicker").Include(
                       "~/Content/jquery.datetimepicker.css"));
+
+            bundles.Add(new StyleBundle("~/Content/awesome").Include(
+                      "~/Content/awesome/css/font-awesome.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/webchat").Include(
                       "~/Content/webchat.css"));
