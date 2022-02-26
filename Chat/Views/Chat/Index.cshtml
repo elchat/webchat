@@ -22,8 +22,8 @@
         </div>
         <div class="panel-body">
             <div class="tab-content">
-                <div id="chat" class="tab-pane fade in active ">
-                    <div id="messages_block" class="col-md-10">
+                <div id="chat" class="tab-pane fade in active row">
+                    <div id="messages_block" class="col-xs-9 col-sm-10 col-md-10 col-lg-10">
                         <div id="messages" data-bind="foreach: messages">
                             <div data-bind="css: {message_bg: Type == 'MESSAGE', you: Type == 'MESSAGE' && UserName == username, info: Type != 'MESSAGE'}">
                                 <span class="message" data-bind="if: Type == 'MESSAGE'">
@@ -48,7 +48,7 @@
                                    data-bind="enable: isJoined, value: messageText"/>
                         </form>
                     </div>
-                    <div id="users_block" class="col-md-2">
+                    <div id="users_block" class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
                         <select id="users" data-bind="options: users,  attr: {size: userListSize}"></select>
                     </div>
 
