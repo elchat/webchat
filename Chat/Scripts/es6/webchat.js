@@ -82,12 +82,13 @@ $.ajaxSetup({
     }
 });
 
+let username = "";
+
 $(document).ready(function() {
 
     const ChatModel = function() {
         const self = this;
         const minUserListSize = 10;
-        let username = "";
 
         self.isJoined = ko.observable(false);
         self.messages = ko.observableArray([]);
@@ -97,7 +98,7 @@ $(document).ready(function() {
 
         var chatHub = $.connection.chatHub;
 
-        chatHub.client.addMessage = function(data) {
+        chatHub.client.addMessage = function (data) {
             self.messages.push(data);
         };
 
@@ -121,6 +122,10 @@ $(document).ready(function() {
         chatHub.client.onNewUserConnected = function(data) {
             self.users.push(data.UserName);
             self.messages.push(data);
+        }
+
+        chatHub.client.stop = function() {
+            $.connection.hub.stop();
         }
 
         self.connect = function() {

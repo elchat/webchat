@@ -9,6 +9,7 @@ using WebChat.Models;
 
 namespace Chat.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly ApplicationContext _context;
@@ -22,6 +23,15 @@ namespace Chat.Hubs
         public void Connect()
         {
             string userName = Context.User.Identity.GetUserName();
+            var existUser = Users.Find(u => u.UserName.Equals(userName));
+            if (existUser != null)
+            {
+                Users.Remove(existUser);
+                ChatMessage removeModel = GetModel(ChatMessage.MessageType.LEAVE, existUser.UserName, null);
+                Clients.Client(existUser.ConnectionId).stop();
+                Clients.Others.onUserDisconnected(removeModel);
+            }
+
             string id = Context.ConnectionId;
             var user = new ChatUser(id, userName);
             Users.Add(user);

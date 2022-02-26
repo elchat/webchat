@@ -31,7 +31,7 @@
                                           data-bind="text: UserName">
                                     </span>
                                     <span class="date text-right" data-bind="text: getDate(DateTime)"></span>
-                                    <br />
+                                    <br/>
                                     <span class="text" data-bind="text: Message"></span>
                                 </span>
                                 <span class="join" data-bind="if: Type == 'JOIN'">
@@ -45,7 +45,7 @@
 
                         <form id="sendForm">
                             <input id="inputText" placeholder="Введите сообщение" type="input"
-                                   data-bind="enable: isJoined, value: messageText" />
+                                   data-bind="enable: isJoined, value: messageText"/>
                         </form>
                     </div>
                     <div id="users_block" class="col-md-2">
@@ -81,7 +81,7 @@
                                 </div>
                             </form>
                         </div>
-                        <br />
+                        <br/>
                         <div class="panel-footer">
                             <button class="btn btn-danger" onclick="clearFilter()">
                                 <span class="fa fa-remove"></span>
@@ -93,7 +93,7 @@
                             </button>
                         </div>
                     </div>
-                    <br />
+                    <br/>
                     <table id="datatable" class="stripe" styl="width:100%">
                         <thead>
                         <tr>
@@ -111,13 +111,8 @@
     </div>
 </div>
 
-
-@Scripts.Render("~/bundles/knockout")
-
 @section scripts {
-    <script>
-        let username = "@User.Identity.GetUserName()";
-    </script>
+    @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/bundles/datatables")
