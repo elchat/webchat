@@ -29,7 +29,11 @@ namespace Chat.Controllers
         {
             startDate = (startDate == null) ? new DateTime(1970, 1, 1) : startDate;
             endDate = (endDate == null) ? new DateTime(3000, 1, 1) : endDate;
-            var msgs = await GetAllMessages().Where(m => m.DateTime >= startDate && m.DateTime <= endDate).ToListAsync();
+            var msgs = await (user.IsEmpty()
+                ? GetAllMessages().Where(m => m.DateTime >= startDate && m.DateTime <= endDate).ToListAsync()
+                : GetAllMessages()
+                    .Where(m => m.DateTime >= startDate && m.DateTime <= endDate && m.UserName.Equals(user))
+                    .ToListAsync());
             return Json(user.IsEmpty() ? msgs : msgs.Where(m => m.UserName.Equals(user)));
         }
 
