@@ -34,7 +34,7 @@ namespace Chat.Controllers
                 : GetAllMessages()
                     .Where(m => m.DateTime >= startDate && m.DateTime <= endDate && m.UserName.Equals(user))
                     .ToListAsync());
-            return Json(user.IsEmpty() ? msgs : msgs.Where(m => m.UserName.Equals(user)));
+            return Json(msgs);
         }
 
         public async Task<JsonResult> getUsers()
