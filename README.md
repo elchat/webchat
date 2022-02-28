@@ -4,3 +4,5 @@
 - Bootstrap 3
 - Knockout.js
 - SignalR
+
+Пароль при регистрации пользователя по умолчанию: !Password1
